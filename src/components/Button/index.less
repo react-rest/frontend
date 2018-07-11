@@ -10,19 +10,38 @@
     flex: 1;
 
     .box {
-      height: 44px;
+      @height: 44px;
+      height: @height;
+      line-height: @height;
       width: 100%;
       position: absolute;
       bottom: 0;
       display: flex;
       border-top: @normal-color 1px solid;
       text-align: center;
-      align-items: center;
 
       .menu {
         flex: 1;
         cursor: pointer;
         border-right: @normal-color 1px solid;
+        position: relative;
+        height: @height;
+        .sub {
+          position: absolute;
+          line-height: @height;
+          width: 100%;
+          bottom: 100%;
+          //border: @normal-color 1px solid;
+          //border-bottom: none;
+          div {
+            min-height: @height;
+            border-top: @normal-color 1px solid;
+          //  border-bottom: @normal-color 1px solid;
+          }
+          //div:last-child {
+          //  border-bottom: none;
+          //}
+        }
       }
       :last-child {
         border-right: none;
