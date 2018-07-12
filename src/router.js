@@ -5,6 +5,7 @@ import Authority from 'components/Authority';
 import IndexPage from './routes/IndexPage';
 import ProductsPage from './routes/Products';
 import LoginPage from 'routes/public/Login';
+import RegisterPage from 'routes/public/Register';
 import ConfigPage from 'routes/systerm/ConfigPage';
 import CustomButtonPage from 'routes/button/CustomPage';
 
@@ -13,7 +14,8 @@ function RouterConfig({ history }) {
     <Router history={history}>
       <Switch>
         <Route path="/login" exact component={LoginPage} />
-        <Authority>
+        <Route path="/register" exact component={RegisterPage} />
+        <Authority history={history}>
           <Route path="/" exact component={IndexPage} />
           <Route path="/products" exact component={ProductsPage} />
           <Route path="/user/config" exact component={ConfigPage} />

@@ -7,3 +7,11 @@ export function login(body) {
   }
   return request('/api/login', options);
 }
+
+export function register(body) {
+  const options = {
+    body,
+    method: 'POST',
+  }
+  return request('/api/register', options);
+}

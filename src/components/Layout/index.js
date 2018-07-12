@@ -14,7 +14,7 @@ export default class SiderDemo extends React.Component {
       <Layout style={{ minHeight: '100vh' }}>
         <SiderComponent {...this.props} menuData={getMenuData()}/>
         <Layout>
-          <HeaderComponent/>
+          <HeaderComponent {...this.props}/>
           <Content style={{ margin: '0 16px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>

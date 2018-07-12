@@ -1,18 +1,22 @@
 import React from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { Link } from 'dva/router';
+import { Form, Icon, Input, Button, message } from 'antd';
 import classNames from 'classnames';
 
-import styles from './index.less';
+import styles from '../Login/index.less';
 
 const FormItem = Form.Item;
 
-class NormalLoginForm extends React.Component {
+@Form.create()
+
+export default class RegisterForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.submit(values);
+        if (values.password === values.password2)
+          this.props.submit(values);
+        else
+          message.error('两次密码不一致');
       }
     });
   }
@@ -23,7 +27,7 @@ class NormalLoginForm extends React.Component {
       <Form onSubmit={this.handleSubmit} className={classNames(styles.main)}>
         <FormItem>
           {getFieldDecorator('username', {
-            initialValue: 'admin',
+            initialValue: 'test',
             rules: [{ required: true, message: '请输入账号' }],
           })(
             <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
@@ -38,23 +42,20 @@ class NormalLoginForm extends React.Component {
           )}
         </FormItem>
         <FormItem>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
+          {getFieldDecorator('password2', {
+            initialValue: '123456',
+            rules: [{ required: true, message: '请确认密码' }],
           })(
-            <Checkbox>记住密码</Checkbox>
+            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
           )}
-          <a className={classNames(styles['login-form-forgot'])} href="">忘记密码</a>
-          <Button type="primary" htmlType="submit" className={classNames(styles['login-form-button'])}>登录</Button>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" htmlType="submit" className={classNames(styles['login-form-button'])}>注册</Button>
           <div>
-            Or <Link to="/register">注册</Link>
+            Or <a href="">login now!</a>
           </div>
         </FormItem>
       </Form>
     );
   }
 }
-
-export default Form.create()(NormalLoginForm);
-
-// ReactDOM.render(<WrappedNormalLoginForm />, mountNode);
