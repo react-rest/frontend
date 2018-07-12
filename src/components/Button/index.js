@@ -20,13 +20,18 @@ export default class ButtonPage extends React.Component {
   state = {
     currentType: 'view',
     selectedButton: {},
+    selectedIndex: null,
     button: [],
   }
 
-  defaultMenu = []
+  defaultMenu = [
+    { type: 'view', name: '+', sub_button: [] },
+    { type: 'view', name: '+', sub_button: [] },
+    { type: 'view', name: '+', sub_button: [] },
+  ]
 
   UNSAFE_componentWillReceiveProps(props) {
-    this.setState({ button: _.get(props, 'button', []) })
+    this.setState({ button: _.get(props, 'button', this.defaultMenu) })
   }
 
   // 获取按钮的类型
@@ -124,17 +129,17 @@ export default class ButtonPage extends React.Component {
   }
 
   // 更改选中菜单
-  onChoose = (e, button) => {
+  onChoose = (e, button, index) => {
     e.stopPropagation();  // 阻止冒泡
-    this.setState({ selectedButton: button, currentType: button.type })
+    this.setState({ selectedButton: button, currentType: button.type, selectedIndex: index })
   }
 
   // 渲染二级菜单
   renderSub = (button) => {
     const sub = button.sub_button
-    const html = [
-      (<div key={-1} onClick={() => this.addSecondMenu(button)}>+</div>)
-    ]
+    const html = []
+
+    if (sub.length < 5) html.push(<div key={-1} onClick={() => this.addSecondMenu(button)}>+</div>)
     // eslint-disable-next-line array-callback-return
     sub.map((button, index) => {
       html.push(
@@ -163,10 +168,22 @@ export default class ButtonPage extends React.Component {
     this.setState({ button });
   }
 
+  // 增加主菜单
+  addMenu = () => {
+    const { button } = this.state;
+    if (button.length < 3)
+      button.push({
+        type: 'view',
+        name: '+',
+        sub_button: [],
+      });
+    this.setState({ button });
+  }
+
   // 渲染单个button，设置事件
   renderButton = (button, index) => {
     return (
-      <div key={index} onClick={e => this.onChoose(e, button)}>
+      <div key={index} onClick={e => this.onChoose(e, button, index)}>
         {!button.type && this.renderSub(button)}
         {button.name}
       </div>
@@ -180,7 +197,7 @@ export default class ButtonPage extends React.Component {
       buttons.map((button, index) => {
         return html.push(
           <div className={styles.menu} key={index}>
-            {this.renderButton(button)}
+            {this.renderButton(button, index)}
           </div>
         );
       })
@@ -190,26 +207,14 @@ export default class ButtonPage extends React.Component {
 
   // 更改输入
   onChange = (e, type = 'name', isDelete = false) => {
-    const value = _.get(e, 'target.value', e)
-    const { button, selectedButton } = this.state
+    const value = _.get(e, 'target.value', e);
+    const { button, selectedButton, selectedIndex } = this.state;
+    console.log('button', button, selectedButton, selectedIndex)
     _.forOwn(button, (item, key) => {
-      if (_.isEqual(item, selectedButton)) isDelete === false ? item[type] = value : delete button[key];
+      if (_.isEqual(item, selectedButton) && parseInt(selectedIndex, 10) === parseInt(key, 10)) isDelete === false ? item[type] = value : button.splice(key, 1)//delete button[key];
       // eslint-disable-next-line array-callback-return
-      item.sub_button.map((btn, key) => {
-        if (_.isEqual(btn, selectedButton)) isDelete === false ? btn[type] = value : item.sub_button.splice(key, 1);
-      })
-    })
-    this.setState({ button })
-  }
-
-  // 删除选中的菜单
-  deleteChoosed = () => {
-    const { button, selectedButton } = this.state
-    _.forOwn(button, (item, key) => {
-      if (_.isEqual(item, selectedButton)) delete button[key]
-      // eslint-disable-next-line array-callback-return
-      item.sub_button.map((i, key) => {
-        if (_.isEqual(i, selectedButton)) item.sub_button.splice(key, 1)
+      item && item.sub_button.map((btn, key) => {
+        if (_.isEqual(btn, selectedButton) && parseInt(selectedIndex, 10) === parseInt(key, 10)) isDelete === false ? btn[type] = value : item.sub_button.splice(key, 1);
       })
     })
     this.setState({ button })
@@ -224,12 +229,13 @@ export default class ButtonPage extends React.Component {
     const buttons = _.get(this.state, 'button', this.defaultMenu);
     const { getFieldDecorator } = this.props.form;
     const selectedButton = _.get(this.state, 'selectedButton', {});
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 16, offset: 4 },
-      },
-    };
+    const selectedIndex = _.get(this.state, 'selectedIndex', null);
+    // const tailFormItemLayout = {
+    //   wrapperCol: {
+    //     xs: { span: 24, offset: 0 },
+    //     sm: { span: 16, offset: 4 },
+    //   },
+    // };
     return (
       <div className={styles.main}>
         <div className={styles.screen}>
@@ -239,7 +245,7 @@ export default class ButtonPage extends React.Component {
         </div>
         <div className={styles.info}>
           <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 4 }} label="菜单名">
-            {getFieldDecorator(`${selectedButton.name}_name`, {
+            {getFieldDecorator(`${selectedButton.name}_${selectedIndex}_name`, {
               initialValue: selectedButton.name,
               rules: [{ required: true, message: '请输入菜单名' }],
               onChange: e => this.onChange(e, 'name'),
@@ -265,8 +271,9 @@ export default class ButtonPage extends React.Component {
             )}
           </FormItem>
           {this.getButtonDetail(getFieldDecorator, selectedButton)}
-          <FormItem {...tailFormItemLayout}>
-            <Button style={{marginRight: '10px'}} type="danger" htmlType="button" className="login-form-button" onClick={() => this.onChange(null, '', true)}>删除选中</Button>
+          <FormItem>
+            <Button type="danger" htmlType="button" className="login-form-button" onClick={() => this.onChange(null, '', true)}>删除选中</Button>
+            <Button style={{marginRight: '10px', marginLeft: '10px'}} type="primary" htmlType="button" className="login-form-button" onClick={this.addMenu}>增加主菜单</Button>
             <Button type="primary" htmlType="button" className="login-form-button" onClick={this.save}>保存</Button>
           </FormItem>
         </div>

@@ -6,11 +6,12 @@ export default {
   state: {},
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
-      if (history.location.pathname === '/button/custom') {
-        dispatch({
-          type: 'getCusButton',
-        })
-      }
+      history.listen(location => {
+        if (location.pathname === '/button/custom')
+          dispatch({
+            type: 'getCusButton'
+          })
+      })
     },
   },
   effects: {

@@ -12,13 +12,13 @@ function RouterConfig({ history }) {
   return (
     <Router history={history}>
       <Switch>
+        <Route path="/login" exact component={LoginPage} />
         <Authority>
           <Route path="/" exact component={IndexPage} />
           <Route path="/products" exact component={ProductsPage} />
           <Route path="/user/config" exact component={ConfigPage} />
           <Route path="/button/custom" exact component={CustomButtonPage} />
         </Authority>
-        <Route path="/login" exact component={LoginPage} />
       </Switch>
     </Router>
   );

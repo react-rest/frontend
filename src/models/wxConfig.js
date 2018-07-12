@@ -6,11 +6,12 @@ export default {
   state: {},
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
-      if (history.location.pathname === '/user/config') {
-        dispatch({
-          type: 'getConfig',
-        })
-      }
+      history.listen(location => {
+        if (location.pathname === '/user/config')
+          dispatch({
+            type: 'getConfig'
+          })
+      })
     },
   },
   effects: {

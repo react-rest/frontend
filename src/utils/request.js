@@ -46,10 +46,11 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
+  const auth = authority();
   const defaultOptions = {
     credentials: 'include',
     headers: {
-      [`${config.SECRET_KEY}-Access`]: authority().accessToken,
+      [`${config.SECRET_KEY}-Access`]: auth ? auth.accessToken : '',
     },
   };
   const newOptions = { ...defaultOptions, ...options };
