@@ -1,6 +1,7 @@
 import fetch from 'dva/fetch';
 import { notification } from 'antd';
-// import { routerRedux } from 'dva/router';
+import { routerRedux } from 'dva/router';
+
 import store from '../index';
 import config from '../config';
 import { authority } from "./authority";
@@ -94,10 +95,12 @@ export default function request(url, options) {
     .catch(e => {
       const { dispatch } = store;
       const status = e.name;
+      authority(-1);
       if (status === 401) {
-        dispatch({
-          type: 'login/logout',
-        });
+        dispatch(routerRedux.replace('/login'));
+        // dispatch({
+        //   type: 'login/logout',
+        // });
         return;
       }
       // if (status === 403) {

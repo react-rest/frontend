@@ -209,7 +209,7 @@ export default class ButtonPage extends React.Component {
   onChange = (e, type = 'name', isDelete = false) => {
     const value = _.get(e, 'target.value', e);
     const { button, selectedButton, selectedIndex } = this.state;
-    console.log('button', button, selectedButton, selectedIndex)
+
     _.forOwn(button, (item, key) => {
       if (_.isEqual(item, selectedButton) && parseInt(selectedIndex, 10) === parseInt(key, 10)) isDelete === false ? item[type] = value : button.splice(key, 1)//delete button[key];
       // eslint-disable-next-line array-callback-return
