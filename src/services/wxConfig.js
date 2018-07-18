@@ -11,3 +11,7 @@ export const saveConfig = (body) => {
   }
   return request('/api/wxConfig', options);
 }
+
+export const getFollowers = (search) => {
+  return request('/api/wx/users' + search)
+}

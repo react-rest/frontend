@@ -8,6 +8,7 @@ import LoginPage from 'routes/public/Login';
 import RegisterPage from 'routes/public/Register';
 import ConfigPage from 'routes/systerm/ConfigPage';
 import CustomButtonPage from 'routes/button/CustomPage';
+import WechatUserListPage from 'routes/wechatUser/index';
 
 function RouterConfig({ history }) {
   return (
@@ -20,6 +21,7 @@ function RouterConfig({ history }) {
           <Route path="/products" exact component={ProductsPage} />
           <Route path="/user/config" exact component={ConfigPage} />
           <Route path="/button/custom" exact component={CustomButtonPage} />
+          <Route path="/wx/users" exact component={WechatUserListPage} />
         </Authority>
       </Switch>
     </Router>

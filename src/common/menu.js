@@ -80,13 +80,13 @@ const menuData = [
     ],
   },
   {
-    name: '详情页',
-    icon: 'profile',
-    path: 'profile',
+    name: '微信用户',
+    icon: 'user',
+    path: 'wx',
     children: [
       {
-        name: '基础详情页',
-        path: 'basic',
+        name: '用户管理',
+        path: 'users',
       },
       {
         name: '高级详情页',

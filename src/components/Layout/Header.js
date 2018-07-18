@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout, Dropdown, Menu } from 'antd';
+import _ from 'lodash';
 
 import styles from './index.less';
 import { authority } from 'utils/authority';
@@ -38,7 +39,7 @@ export default class HeaderComponent extends React.Component {
           <Dropdown
             overlay={this.renderMenu()}
           >
-            <span>Admin</span>
+            <span>{_.get(authority(), 'user.username', '未命名')}</span>
           </Dropdown>
         </div>
       </Header>
