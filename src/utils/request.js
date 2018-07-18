@@ -95,12 +95,9 @@ export default function request(url, options) {
     .catch(e => {
       const { dispatch } = store;
       const status = e.name;
-      authority(-1);
       if (status === 401) {
+        authority(-1);
         dispatch(routerRedux.replace('/login'));
-        // dispatch({
-        //   type: 'login/logout',
-        // });
         return;
       }
       // if (status === 403) {
